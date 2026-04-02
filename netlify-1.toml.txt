@@ -1,18 +1,16 @@
-# ============================================================
-# CONFIGURATION NETLIFY — portail WiFi ZoneNet
-# ============================================================
-
-# Dossier des fonctions serverless
 [functions]
   directory = "netlify/functions"
 
-# Redirections — nécessaire pour que les pages fonctionnent bien
+[[redirects]]
+  from = "/.netlify/functions/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# En-têtes de sécurité
 [[headers]]
   for = "/*"
   [headers.values]
