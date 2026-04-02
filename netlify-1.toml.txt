@@ -1,0 +1,21 @@
+# ============================================================
+# CONFIGURATION NETLIFY — portail WiFi ZoneNet
+# ============================================================
+
+# Dossier des fonctions serverless
+[functions]
+  directory = "netlify/functions"
+
+# Redirections — nécessaire pour que les pages fonctionnent bien
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# En-têtes de sécurité
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

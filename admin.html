@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZoneNet — Panel Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background-color: #0a0f1e;
+      font-family: 'DM Sans', sans-serif;
+      color: #e8f0fe;
+      padding: 20px;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 900px;
+      margin: 0 auto 32px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #1e2d45;
+    }
+    .header-gauche {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .logo-icone {
+      font-size: 24px;
+      background: linear-gradient(135deg, #00e5ff, #0099cc);
+      border-radius: 12px;
+      width: 48px; height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      margin: 0;
+    }
+    .logo h1 span { color: #00e5ff; }
+    .logo p { color: #6b7a99; font-size: 12px; margin: 0; }
+
+    .badge-admin {
+      background: rgba(255,107,53,0.15);
+      border: 1px solid rgba(255,107,53,0.4);
+      color: #ff6b35;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-deconnexion {
+      background: transparent;
+      border: 1px solid #1e2d45;
+      color: #6b7a99;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-deconnexion:hover { border-color: #ff4757; color: #ff4757; }
+
+    /* ===== CONTENU PRINCIPAL ===== */
+    .contenu { max-width: 900px; margin: 0 auto; }
+
+    /* ===== PAGE DE LOGIN ADMIN ===== */
+    .login-admin {
+      max-width: 380px;
+      margin: 60px auto;
+    }
+    .carte {
+      background: #1a2235;
+      border: 1px solid #1e2d45;
+      border-radius: 16px;
+      padding: 32px 28px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    }
+    .carte h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+    .carte > p {
+      color: #6b7a99;
+      font-size: 13px;
+      margin-bottom: 24px;
+    }
+    .champ { margin-bottom: 16px; }
+    .champ label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: #6b7a99;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+    }
+    .champ input {
+      width: 100%;
+      background: #111827;
+      border: 1px solid #1e2d45;
+      border-radius: 10px;
+      padding: 13px 16px;
+      color: #e8f0fe;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .champ input:focus {
+      border-color: #00e5ff;
+      box-shadow: 0 0 0 3px rgba(0,229,255,0.1);
+    }
+    .champ input::placeholder { color: #3a4a65; }
+
+    .erreur {
+      background: rgba(255,71,87,0.12);
+      border: 1px solid rgba(255,71,87,0.3);
+      color: #ff4757;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-entrer {
+      background: linear-gradient(135deg, #00e5ff, #0099bb);
+      color: #000;
+      box-shadow: 0 4px 20px rgba(0,229,255,0.25);
+    }
+    .btn-entrer:hover { transform: translateY(-2px); }
+
+    /* ===== STATS ===== */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .stat-carte {
+      background: #1a2235;
+      border: 1px solid #1e2d45;
+      border-radius: 14px;
+      padding: 20px;
+    }
+    .stat-icone { font-size: 24px; margin-bottom: 10px; }
+    .stat-valeur {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .stat-label { color: #6b7a99; font-size: 12px; margin-top: 4px; }
+
+    /* ===== TABLEAU CODES ===== */
+    .section-titre {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-ajouter {
+      background: linear-gradient(135deg, #00e5ff, #0099bb);
+      color: #000;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-ajouter:hover { transform: translateY(-1px); }
+
+    .tableau-wrapper {
+      background: #1a2235;
+      border: 1px solid #1e2d45;
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    thead {
+      background: #111827;
+    }
+    th {
+      text-align: left;
+      padding: 14px 16px;
+      font-size: 11px;
+      font-weight: 500;
+      color: #6b7a99;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    td {
+      padding: 14px 16px;
+      font-size: 14px;
+      border-top: 1px solid #1e2d45;
+      vertical-align: middle;
+    }
+
+    .code-texte {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      color: #00e5ff;
+      letter-spacing: 1px;
+    }
+
+    /* Badges statut */
+    .statut-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .statut-actif {
+      background: rgba(0,255,157,0.1);
+      border: 1px solid rgba(0,255,157,0.3);
+      color: #00ff9d;
+    }
+    .statut-pause {
+      background: rgba(255,229,0,0.1);
+      border: 1px solid rgba(255,229,0,0.3);
+      color: #ffe500;
+    }
+    .statut-expire {
+      background: rgba(255,71,87,0.1);
+      border: 1px solid rgba(255,71,87,0.3);
+      color: #ff4757;
+    }
+    .statut-bloque {
+      background: rgba(107,122,153,0.15);
+      border: 1px solid rgba(107,122,153,0.3);
+      color: #6b7a99;
+    }
+    .point { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+    /* Boutons actions */
+    .actions { display: flex; gap: 8px; }
+    .btn-action {
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid #1e2d45;
+      background: transparent;
+      color: #6b7a99;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s;
+    }
+    .btn-action:hover { border-color: #ff4757; color: #ff4757; }
+    .btn-action.suppr:hover { border-color: #ff4757; color: #ff4757; }
+
+    /* Vide */
+    .vide {
+      text-align: center;
+      padding: 40px 20px;
+      color: #6b7a99;
+      font-size: 14px;
+    }
+    .vide .icone { font-size: 36px; margin-bottom: 10px; }
+
+    /* Modal ajout code */
+    .modal-fond {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-fond.ouvert { display: flex; }
+    .modal {
+      background: #1a2235;
+      border: 1px solid #1e2d45;
+      border-radius: 16px;
+      padding: 28px;
+      width: 90%;
+      max-width: 360px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    }
+    .modal h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+    .modal-boutons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .btn-annuler {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #1e2d45;
+      background: transparent;
+      color: #6b7a99;
+      border-radius: 10px;
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-confirmer {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      background: linear-gradient(135deg, #00e5ff, #0099bb);
+      color: #000;
+      border-radius: 10px;
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===== PAGE LOGIN ADMIN ===== -->
+  <div id="pageLogin">
+    <div class="login-admin">
+      <div style="text-align:center; margin-bottom:28px;">
+        <div class="logo-icone" style="margin: 0 auto 12px; width:64px; height:64px; font-size:30px;">🛡️</div>
+        <h1 style="font-family:'Syne',sans-serif; font-size:24px; margin:0;">Panel <span style="color:#00e5ff;">Admin</span></h1>
+        <p style="color:#6b7a99; font-size:13px; margin-top:4px;">Accès réservé au gestionnaire</p>
+      </div>
+
+      <div class="carte">
+        <h2>Connexion admin</h2>
+        <p>Entrez vos identifiants pour accéder au panel.</p>
+
+        <div class="erreur" id="erreurLogin">❌ Identifiants incorrects.</div>
+
+        <div class="champ">
+          <label>Nom d'utilisateur</label>
+          <input type="text" id="adminUser" placeholder="admin" />
+        </div>
+        <div class="champ">
+          <label>Mot de passe</label>
+          <input type="password" id="adminPass" placeholder="••••••••" />
+        </div>
+
+        <button class="btn btn-entrer" onclick="connecterAdmin()">
+          Entrer dans le panel →
+        </button>
+
+        <p style="color:#6b7a99; font-size:12px; text-align:center; margin-top:16px;">
+          💡 Test : utilisateur <strong style="color:#e8f0fe;">admin</strong> / mot de passe <strong style="color:#e8f0fe;">1234</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PANEL ADMIN ===== -->
+  <div id="panelAdmin" style="display:none;">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="header-gauche">
+        <div class="logo-icone">📶</div>
+        <div class="logo">
+          <h1>Zone<span>Net</span></h1>
+          <p>Panel de gestion</p>
+        </div>
+        <span class="badge-admin">Admin</span>
+      </div>
+      <button class="btn-deconnexion" onclick="deconnecterAdmin()">
+        🚪 Déconnexion
+      </button>
+    </div>
+
+    <div class="contenu">
+
+      <!-- Stats -->
+      <div class="stats">
+        <div class="stat-carte">
+          <div class="stat-icone">🟢</div>
+          <div class="stat-valeur" id="statActifs">0</div>
+          <div class="stat-label">Sessions actives</div>
+        </div>
+        <div class="stat-carte">
+          <div class="stat-icone">⏸️</div>
+          <div class="stat-valeur" id="statPauses">0</div>
+          <div class="stat-label">En pause</div>
+        </div>
+        <div class="stat-carte">
+          <div class="stat-icone">🔑</div>
+          <div class="stat-valeur" id="statTotal">0</div>
+          <div class="stat-label">Codes total</div>
+        </div>
+        <div class="stat-carte">
+          <div class="stat-icone">💰</div>
+          <div class="stat-valeur" id="statRevenu">0</div>
+          <div class="stat-label">FCFA aujourd'hui</div>
+        </div>
+      </div>
+
+      <!-- Tableau des codes -->
+      <div class="section-titre">
+        Codes d'accès
+        <button class="btn-ajouter" onclick="ouvrirModal()">+ Créer un code</button>
+      </div>
+
+      <div class="tableau-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Forfait</th>
+              <th>Temps restant</th>
+              <th>Statut</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="corpsTableau">
+            <!-- Rempli par JS -->
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== MODAL CRÉATION CODE ===== -->
+  <div class="modal-fond" id="modalCreer">
+    <div class="modal">
+      <h3>➕ Créer un code manuellement</h3>
+
+      <div class="champ">
+        <label>Durée du forfait</label>
+        <select id="modalDuree" style="width:100%; background:#111827; border:1px solid #1e2d45; border-radius:10px; padding:13px 16px; color:#e8f0fe; font-size:15px; outline:none; box-sizing:border-box;">
+          <option value="1800">30 minutes</option>
+          <option value="3600" selected>1 heure</option>
+          <option value="10800">3 heures</option>
+        </select>
+      </div>
+
+      <div class="champ">
+        <label>Prix (FCFA)</label>
+        <input type="number" id="modalPrix" value="500" style="background:#111827; border:1px solid #1e2d45; border-radius:10px; padding:13px 16px; color:#e8f0fe; font-size:15px; outline:none; box-sizing:border-box; width:100%;" />
+      </div>
+
+      <div class="modal-boutons">
+        <button class="btn-annuler" onclick="fermerModal()">Annuler</button>
+        <button class="btn-confirmer" onclick="creerCodeManuellement()">Créer</button>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+
+    // ==========================================
+    // CONNEXION ADMIN
+    // ==========================================
+    // Mot de passe stocké sous forme de hash SHA-256 (jamais en clair)
+    // Mot de passe actuel : zonenet2025
+    // Pour changer : générez un nouveau hash sur https://emn178.github.io/online-tools/sha256.html
+    const ADMIN_USER = "admin";
+    const ADMIN_PASS_HASH = "b5694497513bd5b798e03e15b6e8e4e3a7e63e4be1f85b56fc0d7c5efad1bed9";
+
+    async function hasherMotDePasse(motDePasse) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(motDePasse);
+      const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    async function connecterAdmin() {
+      const user = document.getElementById("adminUser").value.trim();
+      const pass = document.getElementById("adminPass").value;
+      const hashSaisi = await hasherMotDePasse(pass);
+
+      if (user === ADMIN_USER && hashSaisi === ADMIN_PASS_HASH) {
+        document.getElementById("pageLogin").style.display = "none";
+        document.getElementById("panelAdmin").style.display = "block";
+        chargerTableau();
+      } else {
+        document.getElementById("erreurLogin").style.display = "block";
+      }
+    }
+
+    function deconnecterAdmin() {
+      document.getElementById("pageLogin").style.display = "block";
+      document.getElementById("panelAdmin").style.display = "none";
+      document.getElementById("adminUser").value = "";
+      document.getElementById("adminPass").value = "";
+    }
+
+    // Connexion avec Entrée
+    document.addEventListener("keypress", function(e) {
+      if (e.key === "Enter" && document.getElementById("pageLogin").style.display !== "none") {
+        connecterAdmin();
+      }
+    });
+
+    // ==========================================
+    // GÉNÉRATION DE CODE
+    // ==========================================
+    function genererCode() {
+      const lettres = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+      const chiffres = "123456789";
+      let p1 = "", p2 = "";
+      for (let i = 0; i < 3; i++) p1 += lettres[Math.floor(Math.random() * lettres.length)];
+      for (let i = 0; i < 4; i++) p2 += chiffres[Math.floor(Math.random() * chiffres.length)];
+      return p1 + "-" + p2;
+    }
+
+    // ==========================================
+    // GESTION DES CODES (stockage local)
+    // ==========================================
+    function getCodes() {
+      return JSON.parse(localStorage.getItem("adminCodes") || "[]");
+    }
+
+    function sauvegarderCodes(codes) {
+      localStorage.setItem("adminCodes", JSON.stringify(codes));
+    }
+
+    function formaterTemps(secondes) {
+      if (secondes <= 0) return "00:00";
+      const m = Math.floor(secondes / 60);
+      const s = secondes % 60;
+      return String(m).padStart(2, '0') + ":" + String(s).padStart(2, '0');
+    }
+
+    function formaterDuree(secondes) {
+      if (secondes >= 10800) return "3 heures";
+      if (secondes >= 3600) return "1 heure";
+      return "30 minutes";
+    }
+
+    // ==========================================
+    // CHARGER LE TABLEAU
+    // ==========================================
+    function chargerTableau() {
+      const codes = getCodes();
+      const codeActif = localStorage.getItem("codeActif");
+      const tbody = document.getElementById("corpsTableau");
+
+      // Compter les stats
+      let actifs = 0, pauses = 0, revenu = 0;
+
+      if (codes.length === 0) {
+        tbody.innerHTML = `
+          <tr><td colspan="5">
+            <div class="vide">
+              <div class="icone">🔑</div>
+              Aucun code créé. Cliquez sur "+ Créer un code" pour commencer.
+            </div>
+          </td></tr>`;
+        majStats(0, 0, 0, 0);
+        return;
+      }
+
+      tbody.innerHTML = "";
+
+      codes.forEach(function(c, index) {
+        // Récupérer le temps restant depuis localStorage
+        const tempsRestant = parseInt(localStorage.getItem("tempsRestant_" + c.code) || c.duree);
+        const estActif = codeActif === c.code;
+        const estBloque = c.bloque;
+        const estExpire = tempsRestant <= 0;
+
+        // Déterminer le statut
+        let statutHTML = "";
+        if (estBloque) {
+          statutHTML = `<span class="statut-badge statut-bloque"><span class="point"></span> Bloqué</span>`;
+        } else if (estExpire) {
+          statutHTML = `<span class="statut-badge statut-expire"><span class="point"></span> Expiré</span>`;
+        } else if (estActif) {
+          statutHTML = `<span class="statut-badge statut-actif"><span class="point"></span> Actif</span>`;
+          actifs++;
+        } else {
+          statutHTML = `<span class="statut-badge statut-pause"><span class="point"></span> En pause</span>`;
+          pauses++;
+        }
+
+        revenu += c.prix || 0;
+
+        tbody.innerHTML += `
+          <tr>
+            <td><span class="code-texte">${c.code}</span></td>
+            <td>${formaterDuree(c.duree)}</td>
+            <td>${formaterTemps(tempsRestant)}</td>
+            <td>${statutHTML}</td>
+            <td>
+              <div class="actions">
+                <button class="btn-action" onclick="bloquerCode(${index})" title="${c.bloque ? 'Débloquer' : 'Bloquer'}">
+                  ${c.bloque ? '🔓' : '🔒'}
+                </button>
+                <button class="btn-action suppr" onclick="supprimerCode(${index})" title="Supprimer">🗑️</button>
+              </div>
+            </td>
+          </tr>`;
+      });
+
+      majStats(actifs, pauses, codes.length, revenu);
+    }
+
+    function majStats(actifs, pauses, total, revenu) {
+      document.getElementById("statActifs").textContent = actifs;
+      document.getElementById("statPauses").textContent = pauses;
+      document.getElementById("statTotal").textContent = total;
+      document.getElementById("statRevenu").textContent = revenu;
+    }
+
+    // ==========================================
+    // ACTIONS SUR LES CODES
+    // ==========================================
+    function bloquerCode(index) {
+      const codes = getCodes();
+      codes[index].bloque = !codes[index].bloque;
+      sauvegarderCodes(codes);
+      chargerTableau();
+    }
+
+    function supprimerCode(index) {
+      if (!confirm("Supprimer ce code définitivement ?")) return;
+      const codes = getCodes();
+      const code = codes[index].code;
+      localStorage.removeItem("tempsRestant_" + code);
+      codes.splice(index, 1);
+      sauvegarderCodes(codes);
+      chargerTableau();
+    }
+
+    // ==========================================
+    // CRÉER UN CODE MANUELLEMENT
+    // ==========================================
+    function ouvrirModal() {
+      document.getElementById("modalCreer").classList.add("ouvert");
+    }
+    function fermerModal() {
+      document.getElementById("modalCreer").classList.remove("ouvert");
+    }
+
+    function creerCodeManuellement() {
+      const duree = parseInt(document.getElementById("modalDuree").value);
+      const prix = parseInt(document.getElementById("modalPrix").value) || 0;
+      const nouveauCode = genererCode();
+
+      const codes = getCodes();
+      codes.push({ code: nouveauCode, duree: duree, prix: prix, bloque: false });
+      sauvegarderCodes(codes);
+      localStorage.setItem("tempsRestant_" + nouveauCode, duree);
+
+      fermerModal();
+      chargerTableau();
+      alert("✅ Code créé : " + nouveauCode);
+    }
+
+    // Rafraîchir le tableau toutes les 5 secondes
+    setInterval(chargerTableau, 5000);
+
+  </script>
+
+</body>
+</html>

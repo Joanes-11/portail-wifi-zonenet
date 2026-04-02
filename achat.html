@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZoneNet — Acheter un accès</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0; min-height: 100vh; background-color: #0a0f1e;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; font-family: 'DM Sans', sans-serif;
+      color: #e8f0fe; padding: 20px;
+    }
+    .logo { text-align: center; margin-bottom: 28px; }
+    .logo-icone {
+      font-size: 40px; background: linear-gradient(135deg, #00e5ff, #0099cc);
+      border-radius: 16px; width: 64px; height: 64px;
+      display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px;
+    }
+    .logo h1 { font-family: 'Syne', sans-serif; font-size: 26px; margin: 0; }
+    .logo h1 span { color: #00e5ff; }
+    .logo p { color: #6b7a99; font-size: 13px; margin-top: 4px; }
+
+    .carte {
+      background: #1a2235; border: 1px solid #1e2d45; border-radius: 16px;
+      padding: 32px 28px; width: 100%; max-width: 420px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    }
+    .carte h2 { font-family: 'Syne', sans-serif; font-size: 20px; margin-bottom: 6px; }
+    .carte > p { color: #6b7a99; font-size: 13px; margin-bottom: 24px; line-height: 1.6; }
+
+    .titre-section {
+      font-size: 12px; font-weight: 500; color: #6b7a99;
+      text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px;
+    }
+    .forfaits { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+    .forfait {
+      background: #111827; border: 2px solid #1e2d45; border-radius: 12px;
+      padding: 14px 16px; cursor: pointer; display: flex;
+      justify-content: space-between; align-items: center; transition: all 0.2s;
+    }
+    .forfait:hover { border-color: #00e5ff; }
+    .forfait.selectionne { border-color: #00e5ff; background: rgba(0,229,255,0.06); }
+    .forfait-gauche { display: flex; align-items: center; gap: 12px; }
+    .forfait-icone {
+      font-size: 20px; width: 38px; height: 38px; background: #1a2235;
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    }
+    .forfait-nom { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; }
+    .forfait-detail { font-size: 12px; color: #6b7a99; margin-top: 2px; }
+    .forfait-prix { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; color: #00e5ff; }
+    .forfait-devise { font-size: 11px; color: #6b7a99; text-align: right; }
+    .badge {
+      background: rgba(255,107,53,0.15); border: 1px solid rgba(255,107,53,0.4);
+      color: #ff6b35; font-size: 10px; font-weight: 700; padding: 2px 8px;
+      border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 8px;
+    }
+
+    .champ { margin-bottom: 16px; }
+    .champ label {
+      display: block; font-size: 12px; font-weight: 500; color: #6b7a99;
+      text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px;
+    }
+    .champ input {
+      width: 100%; background: #111827; border: 1px solid #1e2d45;
+      border-radius: 10px; padding: 13px 16px; color: #e8f0fe;
+      font-family: 'DM Sans', sans-serif; font-size: 15px; outline: none;
+      box-sizing: border-box; transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .champ input:focus { border-color: #00e5ff; box-shadow: 0 0 0 3px rgba(0,229,255,0.1); }
+    .champ input::placeholder { color: #3a4a65; }
+
+    .resume {
+      background: #111827; border-radius: 10px;
+      padding: 14px 16px; margin-bottom: 16px; font-size: 13px;
+    }
+    .resume-ligne { display: flex; justify-content: space-between; padding: 4px 0; }
+    .resume-ligne span:first-child { color: #6b7a99; }
+    .resume-total {
+      border-top: 1px solid #1e2d45; margin-top: 8px;
+      padding-top: 8px; font-weight: 700; font-size: 15px;
+    }
+    .resume-total span:last-child { color: #00e5ff; }
+
+    .btn {
+      width: 100%; padding: 14px; border: none; border-radius: 10px;
+      font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-payer {
+      background: linear-gradient(135deg, #00e5ff, #0099bb);
+      color: #000; box-shadow: 0 4px 20px rgba(0,229,255,0.25);
+    }
+    .btn-payer:hover { transform: translateY(-2px); }
+    .btn-payer:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .btn-utiliser {
+      background: linear-gradient(135deg, #00ff9d, #00cc77);
+      color: #000; box-shadow: 0 4px 20px rgba(0,255,157,0.2);
+    }
+    .btn-utiliser:hover { transform: translateY(-2px); }
+
+    .alerte-erreur {
+      background: rgba(255,71,87,0.12); border: 1px solid rgba(255,71,87,0.3);
+      color: #ff4757; padding: 12px 16px; border-radius: 10px;
+      font-size: 13px; margin-bottom: 16px; display: none;
+    }
+
+    /* Chargement */
+    .chargement { display: none; text-align: center; padding: 20px 0; }
+    .spinner {
+      width: 48px; height: 48px; border: 4px solid #1e2d45;
+      border-top-color: #00e5ff; border-radius: 50%;
+      animation: spin 0.8s linear infinite; margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .chargement p { color: #6b7a99; font-size: 14px; line-height: 1.8; }
+
+    /* Confirmation */
+    .confirmation { display: none; text-align: center; }
+    .confirmation .icone-succes { font-size: 52px; margin-bottom: 16px; }
+    .confirmation h2 { font-family: 'Syne', sans-serif; font-size: 22px; margin-bottom: 8px; color: #00ff9d; }
+    .confirmation p { color: #6b7a99; font-size: 14px; margin-bottom: 20px; line-height: 1.6; }
+    .code-genere {
+      background: #111827; border: 2px dashed #00e5ff;
+      border-radius: 12px; padding: 20px; margin-bottom: 20px;
+    }
+    .code-genere p { color: #6b7a99; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.8px; }
+    .code-genere .code-valeur {
+      font-family: 'Syne', sans-serif; font-size: 32px;
+      font-weight: 800; color: #00e5ff; letter-spacing: 4px;
+    }
+
+    .securise {
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px; color: #6b7a99; font-size: 11px; margin-top: 12px;
+    }
+    .lien-bas { text-align: center; margin-top: 18px; font-size: 13px; color: #6b7a99; }
+    .lien-bas a { color: #00e5ff; text-decoration: none; font-weight: 500; }
+    .lien-bas a:hover { text-decoration: underline; }
+  </style>
+</head>
+
+<body>
+
+  <div class="logo">
+    <div class="logo-icone">📶</div>
+    <h1>Zone<span>Net</span></h1>
+    <p>Connexion WiFi sécurisée</p>
+  </div>
+
+  <div class="carte">
+
+    <!-- ===== VUE ACHAT ===== -->
+    <div id="vueAchat">
+      <h2>Choisir un forfait</h2>
+      <p>Sélectionnez votre forfait et payez par Mobile Money.</p>
+
+      <div class="alerte-erreur" id="alerteErreur"></div>
+
+      <div class="titre-section">Forfaits disponibles</div>
+      <div class="forfaits">
+
+        <div class="forfait" id="forfait-1" onclick="choisirForfait(1, 30, 250)">
+          <div class="forfait-gauche">
+            <div class="forfait-icone">⚡</div>
+            <div>
+              <div class="forfait-nom">30 minutes</div>
+              <div class="forfait-detail">Idéal pour une courte session</div>
+            </div>
+          </div>
+          <div><div class="forfait-prix">250</div><div class="forfait-devise">FCFA</div></div>
+        </div>
+
+        <div class="forfait selectionne" id="forfait-2" onclick="choisirForfait(2, 60, 500)">
+          <div class="forfait-gauche">
+            <div class="forfait-icone">🌐</div>
+            <div>
+              <div class="forfait-nom">1 heure <span class="badge">Populaire</span></div>
+              <div class="forfait-detail">Parfait pour naviguer confortablement</div>
+            </div>
+          </div>
+          <div><div class="forfait-prix">500</div><div class="forfait-devise">FCFA</div></div>
+        </div>
+
+        <div class="forfait" id="forfait-3" onclick="choisirForfait(3, 180, 1000)">
+          <div class="forfait-gauche">
+            <div class="forfait-icone">🚀</div>
+            <div>
+              <div class="forfait-nom">3 heures</div>
+              <div class="forfait-detail">Pour une longue session productive</div>
+            </div>
+          </div>
+          <div><div class="forfait-prix">1000</div><div class="forfait-devise">FCFA</div></div>
+        </div>
+
+      </div>
+
+      <div class="titre-section">Numéro Mobile Money</div>
+
+      <div class="champ">
+        <label>Numéro de téléphone (MTN / Moov / Celtiis)</label>
+        <input type="tel" id="telephone" placeholder="Ex: 97000000" maxlength="12" />
+      </div>
+
+      <div class="resume">
+        <div class="resume-ligne"><span>Forfait</span><span id="resumeForfait">1 heure</span></div>
+        <div class="resume-ligne"><span>Numéro</span><span id="resumeTel">—</span></div>
+        <div class="resume-ligne resume-total"><span>Total</span><span id="resumePrix">500 FCFA</span></div>
+      </div>
+
+      <button class="btn btn-payer" id="btnPayer" onclick="payerMaintenant()">
+        💳 Payer maintenant
+      </button>
+      <div class="securise">🔒 Paiement sécurisé par FedaPay</div>
+    </div>
+
+    <!-- ===== VUE CHARGEMENT ===== -->
+    <div class="chargement" id="vueChargement">
+      <div class="spinner"></div>
+      <p>
+        Paiement en cours...<br>
+        <strong style="color:#e8f0fe;">Vérifiez votre téléphone</strong><br>
+        et confirmez le paiement Mobile Money.<br>
+        <span style="font-size:12px;">Cette page se met à jour automatiquement.</span>
+      </p>
+    </div>
+
+    <!-- ===== VUE CONFIRMATION ===== -->
+    <div class="confirmation" id="vueConfirmation">
+      <div class="icone-succes">✅</div>
+      <h2>Paiement confirmé !</h2>
+      <p>Voici votre code d'accès WiFi :</p>
+      <div class="code-genere">
+        <p>Votre code d'accès</p>
+        <div class="code-valeur" id="codeGenere">---</div>
+      </div>
+      <p style="font-size:12px; color:#6b7a99; margin-bottom:20px;">
+        📌 Notez ce code ! Il vous sera demandé à chaque connexion.
+      </p>
+      <button class="btn btn-utiliser" onclick="utiliserCode()">
+        Utiliser ce code maintenant →
+      </button>
+    </div>
+
+  </div>
+
+  <div class="lien-bas" id="lienRetour">
+    Déjà un code ? <a href="index.html">Se connecter</a>
+  </div>
+
+  <script>
+
+    // ==========================================
+    // CONFIGURATION FEDAPAY
+    // La clé secrète est dans la Netlify Function (côté serveur, jamais visible ici)
+    // Pour passer en Live : changez FEDAPAY_ENV à "live"
+    // ==========================================
+    const FEDAPAY_ENV = "sandbox"; // ← changer en "live" quand compte vérifié
+
+    let forfaitChoisi = { id: 2, minutes: 60, prix: 500, nom: "1 heure" };
+
+    // ==========================================
+    // SÉLECTION FORFAIT
+    // ==========================================
+    function choisirForfait(id, minutes, prix) {
+      document.querySelectorAll('.forfait').forEach(f => f.classList.remove('selectionne'));
+      document.getElementById('forfait-' + id).classList.add('selectionne');
+      const noms = { 1: "30 minutes", 2: "1 heure", 3: "3 heures" };
+      forfaitChoisi = { id, minutes, prix, nom: noms[id] };
+      document.getElementById('resumeForfait').textContent = forfaitChoisi.nom;
+      document.getElementById('resumePrix').textContent = forfaitChoisi.prix + " FCFA";
+    }
+
+    document.getElementById('telephone').addEventListener('input', function() {
+      document.getElementById('resumeTel').textContent = this.value || '—';
+    });
+
+    // ==========================================
+    // GÉNÉRER UN CODE WIFI UNIQUE
+    // ==========================================
+    function genererCode() {
+      const lettres = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+      const chiffres = "123456789";
+      let p1 = "", p2 = "";
+      for (let i = 0; i < 3; i++) p1 += lettres[Math.floor(Math.random() * lettres.length)];
+      for (let i = 0; i < 4; i++) p2 += chiffres[Math.floor(Math.random() * chiffres.length)];
+      return p1 + "-" + p2;
+    }
+
+    // ==========================================
+    // AFFICHER / CACHER ERREUR
+    // ==========================================
+    function afficherErreur(msg) {
+      const el = document.getElementById('alerteErreur');
+      el.textContent = "❌ " + msg;
+      el.style.display = "block";
+    }
+    function cacherErreur() {
+      document.getElementById('alerteErreur').style.display = "none";
+    }
+
+    // ==========================================
+    // LANCER LE PAIEMENT FEDAPAY
+    // ==========================================
+    async function payerMaintenant() {
+      cacherErreur();
+      const telephone = document.getElementById('telephone').value.trim();
+
+      if (telephone.length < 8) {
+        afficherErreur("Entrez un numéro de téléphone valide (8 chiffres minimum).");
+        return;
+      }
+
+      document.getElementById('btnPayer').disabled = true;
+      document.getElementById('vueAchat').style.display = "none";
+      document.getElementById('vueChargement').style.display = "block";
+
+      try {
+
+        // =====================================================
+        // APPEL SÉCURISÉ → Netlify Function (clé secrète cachée côté serveur)
+        // La clé FedaPay n'est JAMAIS exposée dans ce fichier HTML
+        // =====================================================
+        const rep = await fetch("/.netlify/functions/init-payment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            montant: forfaitChoisi.prix,
+            forfait: forfaitChoisi.nom,
+            telephone: telephone,
+            env: FEDAPAY_ENV
+          })
+        });
+
+        const data = await rep.json();
+        if (!rep.ok) throw new Error(data.erreur || "Erreur lors de la création du paiement.");
+
+        const transactionId = data.transactionId;
+
+        // Attendre la confirmation du paiement Mobile Money
+        await attendreConfirmation(transactionId);
+
+      } catch (err) {
+        document.getElementById('vueChargement').style.display = "none";
+        document.getElementById('vueAchat').style.display = "block";
+        document.getElementById('btnPayer').disabled = false;
+        afficherErreur(err.message || "Une erreur est survenue. Réessayez.");
+      }
+    }
+
+    // ==========================================
+    // VÉRIFIER TOUTES LES 3 SECONDES (max 2 min)
+    // La vérification passe aussi par la Netlify Function
+    // ==========================================
+    async function attendreConfirmation(transactionId) {
+      const MAX = 40;
+      let essais = 0;
+
+      return new Promise((resolve, reject) => {
+        const boucle = setInterval(async () => {
+          essais++;
+          try {
+            const rep = await fetch("/.netlify/functions/check-payment?id=" + transactionId + "&env=" + FEDAPAY_ENV);
+            const data = await rep.json();
+            const statut = data.statut;
+
+            if (statut === "approved") {
+              clearInterval(boucle);
+              paiementConfirme();
+              resolve();
+            } else if (statut === "declined" || statut === "canceled") {
+              clearInterval(boucle);
+              reject(new Error("Paiement refusé ou annulé. Réessayez."));
+            } else if (essais >= MAX) {
+              clearInterval(boucle);
+              reject(new Error("Délai dépassé. Vérifiez votre téléphone et réessayez."));
+            }
+          } catch(e) {
+            clearInterval(boucle);
+            reject(new Error("Erreur réseau. Vérifiez votre connexion."));
+          }
+        }, 3000);
+      });
+    }
+
+    // ==========================================
+    // PAIEMENT CONFIRMÉ → GÉNÉRER LE CODE
+    // ==========================================
+    function paiementConfirme() {
+      const code = genererCode();
+
+      // Sauvegarder le temps pour ce code
+      localStorage.setItem("tempsRestant_" + code, forfaitChoisi.minutes * 60);
+
+      // Ajouter dans la liste admin
+      const codes = JSON.parse(localStorage.getItem("adminCodes") || "[]");
+      codes.push({ code: code, duree: forfaitChoisi.minutes * 60, prix: forfaitChoisi.prix, bloque: false });
+      localStorage.setItem("adminCodes", JSON.stringify(codes));
+
+      // Afficher le code à l'utilisateur
+      document.getElementById('codeGenere').textContent = code;
+      document.getElementById('vueChargement').style.display = "none";
+      document.getElementById('vueConfirmation').style.display = "block";
+      document.getElementById('lienRetour').style.display = "none";
+    }
+
+    // ==========================================
+    // UTILISER LE CODE IMMÉDIATEMENT
+    // ==========================================
+    function utiliserCode() {
+      const code = document.getElementById('codeGenere').textContent;
+      localStorage.setItem("codeActif", code);
+      window.location.href = "session.html";
+    }
+
+  </script>
+
+</body>
+</html>
