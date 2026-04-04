@@ -53,13 +53,12 @@ exports.handler = async (event) => {
       })
     });
 
-    const data1 = await rep1.json();
-    if (!rep1.ok) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ erreur: data1.message || "Erreur création transaction FedaPay." })
-      };
-    }
+   const data1 = await rep1.json();
+  // Afficher la réponse complète pour déboguer
+  return {
+  statusCode: 200,
+  body: JSON.stringify({ debug: data1 })
+};
 
     const transaction = data1.v1?.transaction || data1.transaction || data1;
     const transactionId = transaction.id;
