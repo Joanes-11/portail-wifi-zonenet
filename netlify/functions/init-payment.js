@@ -61,7 +61,8 @@ exports.handler = async (event) => {
       };
     }
 
-    const transactionId = data1.v1.transaction.id;
+    const transaction = data1.v1?.transaction || data1.transaction || data1;
+    const transactionId = transaction.id;
 
     // ÉTAPE 2 — Déclencher la notification Mobile Money sur le téléphone
     const rep2 = await fetch(apiURL + "/transactions/" + transactionId + "/token", {
@@ -79,7 +80,8 @@ exports.handler = async (event) => {
         body: JSON.stringify({ erreur: data2.message || "Erreur déclenchement paiement." })
       };
     }
-
+    console.log("Transaction ID:", transactionId);
+    console.log("Data1:", JSON.stringify(data1));
     // Retourner l'ID de transaction au client (pas la clé secrète !)
     return {
       statusCode: 200,
