@@ -3,8 +3,8 @@
 // Crée une transaction FedaPay côté serveur (clé secrète cachée)
 //
 // Variables d'environnement à configurer sur Netlify :
-//   FEDAPAY_SECRET_SANDBOX = sk_sandbox_i69_dIhflYsGNjGM_PxOwlWe
-//   FEDAPAY_SECRET_LIVE     = sk_live_... (après vérification compte)
+//   FEDAPAY_SECRET_SANDBOX  (à configurer dans Netlify Environment variables)
+//   FEDAPAY_SECRET_LIVE     (à configurer dans Netlify Environment variables)
 // ============================================================
 
 exports.handler = async (event) => {
